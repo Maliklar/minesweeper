@@ -1,8 +1,14 @@
 import { Pressable, StyleSheet, Text, Touchable, View } from "react-native";
 import { FieldCeil } from "../utils/mineSweeper";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
-function Ceil({ ceil, rerender }: { ceil: FieldCeil; rerender: Function }) {
+import useAppContext from "../store/useAppContext";
+function Ceil({ ceil }: { ceil: FieldCeil }) {
+  const [flagged, setFlagged] = useState(false);
+
+  useEffect(() => {
+    setFlagged(false);
+  }, [ceil]);
   let fontColor = "black";
 
   if (ceil.value === 1) {
@@ -18,18 +24,24 @@ function Ceil({ ceil, rerender }: { ceil: FieldCeil; rerender: Function }) {
     fontColor = "purple";
   }
 
+  const { update } = useAppContext();
   return (
     <Pressable
       onPress={() => {
-        // setOpened(true);
-        rerender();
+        if (flagged) return;
         ceil.open();
+        update();
+      }}
+      onLongPress={(e) => {
+        if (ceil.isOpen) return;
+        setFlagged((i) => !i);
       }}
       style={{
         ...styles.container,
         ...(ceil.isOpen ? { borderColor: "#7b7b7b", borderWidth: 1 } : {}),
       }}
     >
+      {flagged && <Icon name="flag-triangle" size={25} color="red" />}
       {ceil.isOpen && (
         <Text
           style={{

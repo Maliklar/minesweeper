@@ -5,13 +5,12 @@ import Ceil from "./Ceil";
 
 type Props = {
   row: FieldRow;
-  rerender: Function;
 };
-const Row = ({ row, rerender }: Props) => {
+const Row = ({ row }: Props) => {
   return (
     <View style={styles.container}>
       {row.ceils.map((ceil, i) => (
-        <Ceil rerender={rerender} ceil={ceil} key={i} />
+        <Ceil ceil={ceil} key={i} />
       ))}
     </View>
   );
