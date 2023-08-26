@@ -11,6 +11,7 @@ import { useEffect, useState } from "react";
 import Icon from "react-native-vector-icons/MaterialCommunityIcons";
 import useAppContext from "../store/useAppContext";
 import { getCeilFontColor } from "../utils/helper";
+import { GameStateEnum } from "../store/AppContext";
 
 const Flag = require("../assets/flag.png");
 
@@ -22,14 +23,19 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
   }, [ceil]);
   const fontColor = getCeilFontColor(ceil.value);
 
-  const { update, setGameState, gameState } = useAppContext();
+  const { update, setGameState, minesField, gameState } = useAppContext();
   return (
     <Pressable
       onPress={() => {
-        if (gameState === "lose") return;
+        if (gameState === GameStateEnum.LOSE) return;
         if (flagged) return;
-        if (ceil.value === -1) setGameState("lose");
-        ceil.open();
+        if (ceil.value === -1) setGameState(GameStateEnum.LOSE);
+
+        if (gameState === GameStateEnum.START) {
+          setGameState(GameStateEnum.PROGRESS);
+          minesField.startGame(ceil);
+        } else ceil.open();
+
         update();
       }}
       onLongPress={() => {

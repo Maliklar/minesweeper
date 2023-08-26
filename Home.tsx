@@ -13,6 +13,7 @@ const Background = require("./assets/background.jpg");
 import { LinearGradient } from "expo-linear-gradient";
 import { useFonts } from "expo-font";
 import { useEffect, useState } from "react";
+import { GameStateEnum } from "./store/AppContext";
 
 const gradient = ["#3d95ff", "#0054e3", "#036bfb"];
 
@@ -38,11 +39,11 @@ const Home = () => {
       </View>
       <View style={styles.controls}>
         {fontsLoaded && <Text style={styles.digitalDisplay}>0</Text>}
-        {gameState === "new" ? (
+        {gameState === GameStateEnum.START ? (
           <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
             <Image source={Start} style={styles.image} />
           </Pressable>
-        ) : gameState === "lose" ? (
+        ) : gameState === GameStateEnum.LOSE ? (
           <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
             <Image source={Lose} style={styles.image} />
           </Pressable>

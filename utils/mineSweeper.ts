@@ -1,60 +1,70 @@
 export default class MinesField {
   rows: FieldRow[] = [];
-  array: Array<Array<number>>;
+  ROWS: number;
+  COLS: number;
+  mines: number;
 
-  create(min: MinesField) {
-    return new MinesField(min.array.length, min.array[0].length, 20);
-  }
-  constructor(r: number, c: number, mines: number) {
-    this.array = [];
-    let m = mines;
-
-    for (let i = 0; i < r; i++) {
-      const row = [];
-      for (let j = 0; j < c; j++) {
-        let random = Math.random() < 0.14;
-        let ceil = 0;
-        if (random && m > 0) {
-          m--;
-          ceil = -1;
-        }
-        row.push(ceil);
-      }
-      this.array.push(row);
-    }
-
-    for (let i = 0; i < r; i++) {
-      for (let j = 0; j < c; j++) {
-        if (this.array[i][j] === -1) continue;
-        let next = 0;
-        // right
-        if (this.array?.[i]?.[j + 1] === -1) next++;
-        // left
-        if (this.array?.[i]?.[j - 1] === -1) next++;
-        // top
-        if (this.array?.[i + 1]?.[j] === -1) next++;
-        // topLeft
-        if (this.array?.[i + 1]?.[j - 1] === -1) next++;
-        // topRight
-        if (this.array?.[i + 1]?.[j + 1] === -1) next++;
-        // bottom
-        if (this.array?.[i - 1]?.[j] === -1) next++;
-        // bottomLeft
-        if (this.array?.[i - 1]?.[j - 1] === -1) next++;
-        // bottomRight
-        if (this.array?.[i - 1]?.[j + 1] === -1) next++;
-        this.array[i][j] = next;
-      }
-    }
-
-    for (let i = 0; i < this.array.length; i++) {
+  constructor(rows: number, cols: number, mines: number) {
+    this.mines = mines;
+    this.ROWS = rows;
+    this.COLS = cols;
+    for (let i = 0; i < this.ROWS; i++) {
       const ceils = [];
-      for (let j = 0; j < this.array[i].length; j++) {
-        ceils.push(new FieldCeil(this.array[i][j]));
-      }
+      for (let j = 0; j < this.COLS; j++) ceils.push(new FieldCeil(0));
       this.rows.push(new FieldRow(ceils));
     }
+  }
 
+  startGame(ceil: FieldCeil) {
+    console.log(this.setRandomMines);
+    this?.setRandomMines(ceil);
+    this?.setValues();
+    this?.setAdjacent();
+    ceil.open();
+  }
+
+  // Set mines after the user clicks on the first ceil
+  setRandomMines(firstCeil: FieldCeil) {
+    let m = this.mines;
+    while (m >= 0) {
+      const randomRow = Math.floor(Math.random() * this.ROWS);
+      const randomCol = Math.floor(Math.random() * this.COLS);
+      const ceil = this.rows?.[randomRow]?.ceils?.[randomCol];
+      if (ceil.value === 0 && ceil != firstCeil) {
+        ceil.value = -1;
+        m--;
+      }
+    }
+  }
+
+  // The value of the current ceil
+  setValues() {
+    for (let i = 0; i < this.ROWS; i++) {
+      for (let j = 0; j < this.COLS; j++) {
+        if (this.rows[i].ceils[j].value === -1) continue;
+        let next = 0;
+        // right
+        if (this.rows?.[i]?.ceils[j + 1]?.value === -1) next++;
+        // left
+        if (this.rows?.[i]?.ceils[j - 1]?.value === -1) next++;
+        // top
+        if (this.rows?.[i + 1]?.ceils[j]?.value === -1) next++;
+        // topLeft
+        if (this.rows?.[i + 1]?.ceils[j - 1]?.value === -1) next++;
+        // topRight
+        if (this.rows?.[i + 1]?.ceils[j + 1]?.value === -1) next++;
+        // bottom
+        if (this.rows?.[i - 1]?.ceils[j]?.value === -1) next++;
+        // bottomLeft
+        if (this.rows?.[i - 1]?.ceils[j - 1]?.value === -1) next++;
+        // bottomRight
+        if (this.rows?.[i - 1]?.ceils[j + 1]?.value === -1) next++;
+        this.rows[i].ceils[j].value = next;
+      }
+    }
+  }
+  //   Set the values of the adjacent ceils
+  setAdjacent() {
     for (let i = 0; i < this.rows.length; i++) {
       for (let j = 0; j < this.rows[i].ceils.length; j++) {
         let t: FieldCeil | undefined;
@@ -99,19 +109,6 @@ export default class MinesField {
         });
       }
     }
-  }
-
-  print() {
-    let s = "";
-    for (let i = 0; i < this.array.length; i++) {
-      s += "\n";
-      for (let j = 0; j < this.array[i].length; j++) {
-        if (this.array[i][j] >= 0) {
-          s += " " + this.array[i][j] + " ";
-        } else s += this.array[i][j] + " ";
-      }
-    }
-    console.log(s);
   }
 }
 export class FieldRow {
