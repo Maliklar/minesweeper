@@ -1,4 +1,4 @@
-import { Button, View, StyleSheet, Image, Text } from "react-native";
+import { Button, View, StyleSheet, Image, Text, Pressable } from "react-native";
 import Grid from "./components/Grid";
 import useAppContext from "./store/useAppContext";
 const Win = require("./assets/win.jpg");
@@ -11,11 +11,17 @@ const Logo = require("./assets/logo.png");
 const Background = require("./assets/background.jpg");
 
 import { LinearGradient } from "expo-linear-gradient";
+import { useFonts } from "expo-font";
+import { useEffect, useState } from "react";
 
 const gradient = ["#3d95ff", "#0054e3", "#036bfb"];
-const Home = () => {
-  const { newGame } = useAppContext();
 
+const Home = () => {
+  const [fontsLoaded, fontError] = useFonts({
+    DigitalDisplay: require("./assets/fonts/Digital Display.ttf"),
+  });
+
+  const { newGame, gameState, timer } = useAppContext();
   return (
     <View style={styles.container}>
       <Image style={styles.background} source={Background} />
@@ -30,14 +36,24 @@ const Home = () => {
           <Image style={styles.image} source={Close} />
         </View>
       </View>
-      <View style={styles.controls}></View>
+      <View style={styles.controls}>
+        {fontsLoaded && <Text style={styles.digitalDisplay}>0</Text>}
+        {gameState === "new" ? (
+          <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
+            <Image source={Start} style={styles.image} />
+          </Pressable>
+        ) : gameState === "lose" ? (
+          <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
+            <Image source={Lose} style={styles.image} />
+          </Pressable>
+        ) : (
+          <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
+            <Image source={Win} style={styles.image} />
+          </Pressable>
+        )}
+        {fontsLoaded && <Text style={styles.digitalDisplay}>{timer}</Text>}
+      </View>
       <Grid />
-      <Button
-        onPress={() => {
-          newGame();
-        }}
-        title="Restart"
-      ></Button>
     </View>
   );
 };
@@ -60,7 +76,6 @@ const styles = StyleSheet.create({
     gap: 8,
     alignItems: "center",
     height: 40,
-
     width: "100%",
     borderTopRightRadius: 6,
     borderTopLeftRadius: 6,
@@ -75,7 +90,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 18,
   },
-  controls: {},
+  controls: {
+    flexDirection: "row",
+    height: 60,
+    backgroundColor: "#c0c0c0",
+    padding: 6,
+    // borderColor: "#ffffff",
+    borderStyle: "solid",
+    borderWidth: 6,
+    borderTopColor: "white",
+    borderLeftColor: "white",
+    borderRightColor: "#808080",
+    borderBottomColor: "#808080",
+  },
   image: {
     height: "100%",
     width: "auto",
@@ -90,5 +117,38 @@ const styles = StyleSheet.create({
     objectFit: "cover",
 
     flex: 1,
+  },
+
+  flagsCount: {
+    backgroundColor: "black",
+    height: "100%",
+    flex: 2,
+  },
+  buttonsContainer: {
+    flex: 10,
+    height: "100%",
+  },
+  timer: {
+    backgroundColor: "black",
+    height: "100%",
+    flex: 2,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+
+  digitalDisplay: {
+    backgroundColor: "black",
+    display: "flex",
+    height: "100%",
+    minWidth: 60,
+    verticalAlign: "middle",
+    textAlignVertical: "center",
+    padding: 6,
+    alignItems: "center",
+    justifyContent: "center",
+    textAlign: "center",
+    color: "red",
+    fontFamily: "DigitalDisplay",
+    fontSize: 30,
   },
 });

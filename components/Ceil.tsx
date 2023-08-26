@@ -22,11 +22,13 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
   }, [ceil]);
   const fontColor = getCeilFontColor(ceil.value);
 
-  const { update } = useAppContext();
+  const { update, setGameState, gameState } = useAppContext();
   return (
     <Pressable
       onPress={() => {
+        if (gameState === "lose") return;
         if (flagged) return;
+        if (ceil.value === -1) setGameState("lose");
         ceil.open();
         update();
       }}

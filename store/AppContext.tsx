@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import MinesField from "../utils/mineSweeper";
 import React from "react";
 
@@ -8,6 +8,9 @@ type ContextType = {
   update: Function;
   newGame: Function;
   minesField: MinesField;
+  gameState: "new" | "lose" | "win";
+  setGameState: (state: "new" | "lose" | "win") => void;
+  timer: number;
 };
 
 type Props = {
@@ -15,8 +18,25 @@ type Props = {
 };
 const AppContext = ({ children }: Props) => {
   const [minesField, setMinesField] = useState(new MinesField(10, 10, 10));
+  const [gameState, setGameState] = useState<"new" | "lose" | "win">("new");
+  const [timer, setTimer] = useState(0);
+
+  useEffect(() => {
+    console.log("USE EFFECT", gameState);
+    const interval = setInterval(() => {
+      setTimer((i) => i + 1);
+    }, 1000);
+
+    if (gameState === "lose") clearInterval(interval);
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [gameState]);
   const newGame = () => {
     setMinesField(new MinesField(10, 10, 10));
+    setGameState("new");
+    setTimer(0);
   };
   const update = () => {
     if (!minesField) return;
@@ -29,6 +49,9 @@ const AppContext = ({ children }: Props) => {
         newGame,
         update,
         minesField,
+        gameState,
+        setGameState,
+        timer,
       }}
     >
       {children}
