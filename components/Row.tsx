@@ -1,4 +1,3 @@
-import { ReactNode } from "react";
 import { StyleSheet, View } from "react-native";
 import { FieldRow } from "../utils/mineSweeper";
 import Ceil from "./Ceil";

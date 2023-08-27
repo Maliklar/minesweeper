@@ -18,11 +18,11 @@ import { GameStateEnum } from "./store/AppContext";
 const gradient = ["#3d95ff", "#0054e3", "#036bfb"];
 
 const Home = () => {
-  const [fontsLoaded, fontError] = useFonts({
+  const { newGame, gameState, timer } = useAppContext();
+  const [fontsLoaded] = useFonts({
     DigitalDisplay: require("./assets/fonts/Digital Display.ttf"),
   });
 
-  const { newGame, gameState, timer } = useAppContext();
   return (
     <View style={styles.container}>
       <Image style={styles.background} source={Background} />
@@ -39,7 +39,8 @@ const Home = () => {
       </View>
       <View style={styles.controls}>
         {fontsLoaded && <Text style={styles.digitalDisplay}>0</Text>}
-        {gameState === GameStateEnum.START ? (
+        {gameState === GameStateEnum.START ||
+        gameState === GameStateEnum.PROGRESS ? (
           <Pressable onPress={() => newGame()} style={styles.buttonsContainer}>
             <Image source={Start} style={styles.image} />
           </Pressable>
@@ -54,7 +55,14 @@ const Home = () => {
         )}
         {fontsLoaded && <Text style={styles.digitalDisplay}>{timer}</Text>}
       </View>
-      <Grid />
+      <View
+        style={{
+          flex: 1,
+          backgroundColor: "gray",
+        }}
+      >
+        <Grid />
+      </View>
     </View>
   );
 };
