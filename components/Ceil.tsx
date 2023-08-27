@@ -30,7 +30,6 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
         if (gameState === GameStateEnum.LOSE) return;
         if (flagged) return;
         if (ceil.value === -1) setGameState(GameStateEnum.LOSE);
-
         if (gameState === GameStateEnum.START) {
           setGameState(GameStateEnum.PROGRESS);
           minesField.startGame(ceil);
@@ -44,12 +43,10 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
       }}
       style={{
         ...styles.container,
-        ...(ceil.isOpen || flagged
-          ? { borderColor: "#7b7b7b", borderWidth: 2 }
-          : {}),
+        ...(ceil.isOpen ? { borderColor: "#7b7b7b", borderWidth: 2 } : {}),
       }}
     >
-      {flagged && <Image style={styles.image} source={Flag} />}
+      {flagged && <Icon name="flag" size={20} color="red" />}
       {ceil.isOpen && (
         <Text
           style={{
