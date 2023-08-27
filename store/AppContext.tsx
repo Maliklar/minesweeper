@@ -23,15 +23,18 @@ export enum GameStateEnum {
 type Props = {
   children: JSX.Element;
 };
+
+const GAME_CONFIG = [10, 10, 10];
 const AppContext = ({ children }: Props) => {
-  const [minesField, setMinesField] = useState(new MinesField(10, 10, 10));
+  const [minesField, setMinesField] = useState(
+    new MinesField(GAME_CONFIG[0], GAME_CONFIG[1], GAME_CONFIG[2])
+  );
   const [gameState, setGameState] = useState(GameStateEnum.START);
   const [timer, setTimer] = useState(0);
 
   useEffect(() => {
-    if (gameState !== GameStateEnum.PROGRESS) {
-      return;
-    }
+    if (gameState !== GameStateEnum.PROGRESS) return;
+
     const interval = setInterval(() => {
       if (gameState !== GameStateEnum.PROGRESS) clearInterval(interval);
       setTimer((i) => i + 1);
@@ -43,7 +46,9 @@ const AppContext = ({ children }: Props) => {
   }, [gameState]);
 
   const newGame = () => {
-    setMinesField(new MinesField(10, 10, 10));
+    setMinesField(
+      new MinesField(GAME_CONFIG[0], GAME_CONFIG[1], GAME_CONFIG[2])
+    );
     setGameState(GameStateEnum.START);
     setTimer(0);
   };

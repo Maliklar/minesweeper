@@ -45,7 +45,7 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
       style={{
         ...styles.container,
         ...(ceil.isOpen || flagged
-          ? { borderColor: "#7b7b7b", borderWidth: 1 }
+          ? { borderColor: "#7b7b7b", borderWidth: 2 }
           : {}),
       }}
     >
@@ -72,24 +72,26 @@ function Ceil({ ceil }: { ceil: FieldCeil }) {
 }
 export default Ceil;
 
-const size = 35;
+const size = "auto";
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     borderStyle: "solid",
-    borderWidth: 4,
+    borderWidth: 2,
     overflow: "hidden",
-    flex: 1,
     backgroundColor: "#bdbdbd",
     borderTopColor: "white",
     borderLeftColor: "white",
     borderBottomColor: "#7b7b7b",
     borderRightColor: "#7b7b7b",
-    height: size,
-    width: size,
-    minWidth: size,
-    minHeight: size,
+    // height: size,
+    // width: size,
+    // minWidth: size,
+    // minHeight: size,
+    // maxHeight: size,
+    // maxWidth: size,
   },
 
   image: {

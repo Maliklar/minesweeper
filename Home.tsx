@@ -57,7 +57,6 @@ const Home = () => {
       </View>
       <View
         style={{
-          flex: 1,
           backgroundColor: "gray",
         }}
       >
@@ -124,7 +123,6 @@ const styles = StyleSheet.create({
     width: "100%",
     height: "100%",
     objectFit: "cover",
-
     flex: 1,
   },
 

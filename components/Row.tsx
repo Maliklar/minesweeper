@@ -19,5 +19,6 @@ const styles = StyleSheet.create({
   container: {
     display: "flex",
     flexDirection: "row",
+    minHeight: 35,
   },
 });
